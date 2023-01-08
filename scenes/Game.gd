@@ -149,7 +149,8 @@ We'll need that next page decrypted to learn more.
 
 As you've probably guessed, that's all there is for now. I might continue the story in a future game though.
 
-I don't think my 'wordle' puzzle is as fun to play as it could be. But if for some reason you enjoyed it you can play more below:
+I've made a timed highscore-tracking mode with cheats disabled, if you enjoyed playing this game you can try that below.
+As of writing this I have 5 minutes until the deadline, so it's not tested :P
 
 [hack]allwords[/hack]
 """,
@@ -167,6 +168,8 @@ I don't think my 'wordle' puzzle is as fun to play as it could be. But if for so
 
 var _last_page = -1
 var _hacking = false
+var _allwords_timer = 0
+var _allwords_timing = false
 
 var rng = RandomNumberGenerator.new()
 
@@ -176,6 +179,10 @@ func _ready():
 	$Music.volume_db += Settings.setting.audio_volume_shift
 
 	update_game(Settings.setting.current_page as String)
+
+func _process(delta):
+	if _allwords_timing:
+		_allwords_timer += delta
 
 func start_next(page):
 	Settings.setting.current_page = page
@@ -231,7 +238,11 @@ func start_hacking(command):
 		randomize()
 		list.shuffle()
 
-		$HackingScreen.bringup("theend", list, false)
+		$HackingScreen.bringup("allwords", list, false, false, true, true)
+		_allwords_timing = true
+		_allwords_timer = 0
+		$Timer.visible = true
+		$Timer/Timer.start()
 	else:
 		var queue = []
 
@@ -258,6 +269,26 @@ func stop_hacking(success = false, id = ""):
 			Settings.setting.current_page = 9
 		elif id == "theend":
 			Settings.setting.current_page = 1337
+		elif id == "allwords":
+			_allwords_timing = false
+			$Timer/Timer.stop()
+			$Timer.visible = false
+
+			if _allwords_timer > Settings.setting.highscore:
+				Settings.setting.highscore = _allwords_timer
+
+				story[1338] = "[center][color=#11EE00]New Best Time![/color]\n\nYou harvested %d words in %0.3f seconds![/center]" % [
+					words.size(),
+					_allwords_timer
+				]
+			else:
+				story[1338] = "[center]All Data Decrypted!\n\nYou harvested %d words in %0.3f seconds!\nBest Time: %0.3f seconds.[/center]" % [
+					words.size(),
+					_allwords_timer,
+					Settings.setting.highscore
+				]
+
+			Settings.setting.current_page = 1338
 		else:
 			Settings.setting.current_page = id as int
 
@@ -284,3 +315,7 @@ func _on_button_activate(button):
 
 	if button == "keybinds":
 		$KeyChangeMenu.visible = true
+
+
+func _on_Timer_timeout():
+	$Timer.text = "Timer:\n%0.1f" % _allwords_timer

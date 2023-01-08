@@ -10,9 +10,10 @@ config_version=4
 
 [application]
 
-config/name="LD52"
+config/name="Encryption Harvester"
 run/main_scene="res://scenes/MainMenu.tscn"
 boot_splash/use_filter=false
+boot_splash/bg_color=Color( 0, 0, 0, 1 )
 config/icon="res://icon.png"
 
 [autoload]

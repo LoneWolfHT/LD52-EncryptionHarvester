@@ -15,6 +15,7 @@ var _text_clean = ""
 var _step = 1
 var _letter_step = 1
 var _extra_help = false
+var _disable_hacks = false
 var _random = false
 var _resume = false
 
@@ -30,12 +31,13 @@ func _ready():
 
 	$CheatSheet/BG/commands.bbcode_text = "[color=#00ff00][url]help[/url][/color]\n[color=#00ff00][url]exit[/url][/color]\n[color=#00ff00][url]clear[/url][/color]\n[color=#00ff00][url]goal[/url][/color]\n[color=#00ff00]guess <word>[/color]"
 
-func bringup(id, newwords, random = false, showfirst = false, help = false):
+func bringup(id, newwords, random = false, showfirst = false, help = false, disable_hacks = false):
 	if id != _id:
 		_words = newwords
 		_current_word = 0
 		_random = random
 		_extra_help = help || random || Settings.setting.always_extra_hints
+		_disable_hacks = disable_hacks
 		_id = id
 		_done = false
 		_solved = {}
@@ -209,6 +211,10 @@ func command(text, clicked = false):
 	elif text[0] == "goal":
 		_show_goal()
 	elif !_done && text[0] == "!cheat":
+		if _disable_hacks:
+			write_terminal("Hacks are disabled, courtesy of the hacker 'Harvest Moon'")
+			return
+
 		if text.size() > 1:
 			if text[1] == "show":
 				write_terminal(_words[_current_word] + "\n")

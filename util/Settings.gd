@@ -11,6 +11,7 @@ export var default_setting = {
 	"keybinds"          : {},
 	"current_page"      : 0,
 	"score"             : 0,
+	"highscore"         : 0,
 }
 
 export var setting: Dictionary = default_setting.duplicate(true)
