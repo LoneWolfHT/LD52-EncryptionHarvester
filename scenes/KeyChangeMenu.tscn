@@ -1,0 +1,59 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://font/FontLarge.tres" type="DynamicFont" id=1]
+[ext_resource path="res://scenes/KeyChangeMenu.gd" type="Script" id=2]
+[ext_resource path="res://audio/volumeblip.ogg" type="AudioStream" id=3]
+[ext_resource path="res://util/buttonpress.gd" type="Script" id=4]
+[ext_resource path="res://font/FontButton.tres" type="DynamicFont" id=5]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0, 0, 0, 1 )
+
+[node name="KeyChangeMenu" type="Control"]
+margin_right = 1280.0
+margin_bottom = 720.0
+script = ExtResource( 2 )
+
+[node name="Panel" type="Panel" parent="."]
+margin_right = 1280.0
+margin_bottom = 720.0
+custom_styles/panel = SubResource( 1 )
+
+[node name="Scroll" type="ScrollContainer" parent="Panel"]
+margin_top = 100.0
+margin_right = 1280.0
+margin_bottom = 720.0
+grow_horizontal = 2
+grow_vertical = 2
+scroll_horizontal_enabled = false
+
+[node name="KeyList" type="VBoxContainer" parent="Panel/Scroll"]
+margin_right = 1280.0
+margin_bottom = 620.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 24
+
+[node name="Label" type="Label" parent="."]
+margin_left = 1.0
+margin_right = 1280.0
+margin_bottom = 70.0
+custom_fonts/font = ExtResource( 1 )
+text = "Change Keys"
+align = 1
+valign = 1
+
+[node name="Back" type="Button" parent="."]
+margin_left = 14.0
+margin_top = 12.0
+margin_right = 151.0
+margin_bottom = 55.0
+custom_fonts/font = ExtResource( 5 )
+text = "< Back"
+script = ExtResource( 4 )
+button_name = "back"
+signal_target = NodePath("..")
+
+[node name="Blip" type="AudioStreamPlayer" parent="Back"]
+stream = ExtResource( 3 )
+volume_db = -4.0
