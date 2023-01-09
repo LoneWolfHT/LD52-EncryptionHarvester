@@ -15,6 +15,8 @@ var content_set = false
 func _ready():
 	update_help_text()
 
+	$Content.bbcode_text = "" # Filled with debug text in the editor
+
 	if Settings.setting.postjam:
 		$Blip.volume_db -= 12.0
 

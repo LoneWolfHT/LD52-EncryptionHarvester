@@ -78,6 +78,10 @@ func _on_PostJam_toggled(button_pressed: bool):
 	Settings.setting.postjam = button_pressed
 
 	if button_pressed:
+		Settings.setting.always_extra_hints = true
+		$Toggles/ExtraHints.pressed         = true
+
+	if button_pressed:
 		$Toggles/ExtraHints/Blip.pitch_scale = 1.2
 	else:
 		$Toggles/ExtraHints/Blip.pitch_scale = 0.8

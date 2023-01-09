@@ -76,9 +76,12 @@ func update_help_text():
 	if _extra_help:
 		text += " and [color=yellow]yellow[/color] if they are found somewhere else in the word."
 	else:
-		text += "| [color=yellow]yellow[/color] letters are disabled (Force-enable them with the extra hints setting)."
+		if Settings.setting.postjam:
+			text += "| [color=yellow]yellow[/color] letters are [color=red]disabled[/color] (Force-enable them with the extra hints setting in the main menu)"
+		else:
+			text += "| [color=yellow]yellow[/color] letters are disabled (Force-enable them with the extra hints setting)."
 
-	if !_random:
+	if !_random && (!Settings.setting.postjam || !_disable_hacks):
 		text += "\nIf you get stuck you can [code][color=#00ff00][url]exit[/url][/color][/code] to check the story for clues. Or just [code][color=#00ff00][url]!cheat[/url][/color][/code]"
 
 	$Help.bbcode_text = text
@@ -218,7 +221,7 @@ func command(text, clicked = false):
 		_show_goal()
 	elif !_done && text[0] == "!cheat":
 		if _disable_hacks:
-			write_terminal("Hacks are disabled, courtesy of the hacker 'Harvest Moon'")
+			write_terminal("Hacks are disabled, courtesy of the hacker 'Harvest Moon'\n")
 			return
 
 		if text.size() > 1:

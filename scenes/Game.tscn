@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://util/buttonpress.gd" type="Script" id=1]
 [ext_resource path="res://scenes/Game.gd" type="Script" id=2]
@@ -10,12 +10,19 @@
 [ext_resource path="res://audio/game.ogg" type="AudioStream" id=8]
 [ext_resource path="res://font/FiraMono/FiraMono-Regular.otf" type="DynamicFontData" id=9]
 [ext_resource path="res://audio/game_postjam.ogg" type="AudioStream" id=10]
+[ext_resource path="res://font/Gravity-Regular.otf" type="DynamicFontData" id=11]
 
 [sub_resource type="DynamicFont" id=1]
 size = 29
 use_mipmaps = true
 use_filter = true
 font_data = ExtResource( 9 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 15
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 11 )
 
 [node name="Game" type="Node2D"]
 script = ExtResource( 2 )
@@ -60,6 +67,16 @@ text = "Keybinds"
 script = ExtResource( 1 )
 button_name = "keybinds"
 signal_target = NodePath("..")
+
+[node name="PostJamHelp" type="RichTextLabel" parent="."]
+margin_left = 11.0
+margin_top = 543.0
+margin_right = 238.0
+margin_bottom = 644.0
+custom_fonts/normal_font = SubResource( 2 )
+bbcode_enabled = true
+bbcode_text = "You won't lose your progress if you exit to the main menu, so feel free to change settings to your liking."
+text = "You won't lose your progress if you exit to the main menu, so feel free to change settings to your liking."
 
 [node name="KeyChangeMenu" parent="." instance=ExtResource( 5 )]
 visible = false

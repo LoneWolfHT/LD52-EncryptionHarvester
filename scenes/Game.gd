@@ -181,6 +181,8 @@ func _ready():
 		$Music.volume_db += Settings.setting.audio_volume_shift
 		$Music.play()
 
+		$PostJamHelp.visible = false
+
 	update_game(Settings.setting.current_page as String)
 
 func _process(delta):

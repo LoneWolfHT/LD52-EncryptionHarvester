@@ -302,7 +302,9 @@ bbcode_text = "
 - Reduced the volume of the text typing effects
 - Ingame Music: Added instruments cut from the jam version, track is 2x as long
 - Fixed yellow letter hints showing for letters you've already found
-- Misc text fixes"
+- Toggling on the post-jam button will also enable extra hints
+- Made the help text below the hacking terminal more noticable
+- Added help text saying your progress is saved if you exit to the menu"
 text = "
 These changes are only applied when you enable them
 (See the toggle button in the main menu)
@@ -310,7 +312,9 @@ These changes are only applied when you enable them
 - Reduced the volume of the text typing effects
 - Ingame Music: Added instruments cut from the jam version, track is 2x as long
 - Fixed yellow letter hints showing for letters you've already found
-- Misc text fixes"
+- Toggling on the post-jam button will also enable extra hints
+- Made the help text below the hacking terminal more noticable
+- Added help text saying your progress is saved if you exit to the menu"
 
 [connection signal="finished" from="Blip" to="." method="_on_Blip_finished"]
 [connection signal="timeout" from="Music/Timer" to="." method="_on_Timer_timeout"]
