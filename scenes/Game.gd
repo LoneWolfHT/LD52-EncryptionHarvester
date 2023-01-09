@@ -59,7 +59,7 @@ They've reached out to you for help, and you have a tool that can fully decrypt 
 
 [color=#9999ff]<Agent>[/color] Alright. It looks like Project HARVEST involves causing a [i]huge[/i] explosion, [i]aliens[/i], and deconstruction of one of their ships for research purposes.
 [color=#9999ff]<Agent>[/color] They've either lost it or our surveillance department has been slacking.[brk]
-We'll need that next page decrypted to learn more.
+[color=#9999ff]<Agent>[/color] We'll need that next page decrypted to learn more.
 
 [hack]steptwo[/hack]
 """,
@@ -162,8 +162,6 @@ As of writing this I have 5 minutes until the deadline, so it's not tested :P
 
 # [hack][/hack]
 # """,
-
-
 }
 
 var _last_page = -1
@@ -176,7 +174,12 @@ var rng = RandomNumberGenerator.new()
 func _ready():
 	rng.randomize()
 
-	$Music.volume_db += Settings.setting.audio_volume_shift
+	if Settings.setting.postjam:
+		$MusicPostJam.volume_db += Settings.setting.audio_volume_shift
+		$MusicPostJam.play()
+	else:
+		$Music.volume_db += Settings.setting.audio_volume_shift
+		$Music.play()
 
 	update_game(Settings.setting.current_page as String)
 

@@ -6,6 +6,7 @@ var _words = []
 var _current_word
 var _last_guess
 var _solved = {}
+var _unsolved = "" #postjam
 
 var _id = ""
 var _done = false
@@ -25,6 +26,9 @@ func _ready():
 	if self.connect("stop_hacking", get_parent(), "stop_hacking") != OK:
 		push_error("Parent doesn't handle hack requests")
 
+	if Settings.setting.postjam:
+		$Screen/Blip.volume_db -= 12.0
+
 	$Screen/Blip.volume_db += Settings.setting.audio_volume_shift
 	$Input/Blip.volume_db  += Settings.setting.audio_volume_shift
 	$Blip.volume_db  += Settings.setting.audio_volume_shift
@@ -41,12 +45,14 @@ func bringup(id, newwords, random = false, showfirst = false, help = false, disa
 		_id = id
 		_done = false
 		_solved = {}
+		_unsolved = newwords[0] #postjam
 		_command_history = []
 
 		if !showfirst:
 			_last_guess = "[color=red]%s[/color]" % "_".repeat(newwords[0].length())
 		else:
 			_solved[0] = newwords[0][0]
+			_unsolved.erase(0, 1) #postjam
 			_last_guess = "[color=#2099FF]%s[/color][color=red]%s[/color]" % [
 				newwords[0][0],
 				"_".repeat(newwords[0].length()-1),
@@ -325,11 +331,17 @@ func _make_guess(guess):
 
 			if !_solved.has(i):
 				_solved[i] = _words[_current_word][i]
+
+				if Settings.setting.postjam:
+					var pos = _unsolved.find(_words[_current_word][i])
+
+					if pos >= 0:
+						_unsolved.erase(pos, 1)
 			else:
 				guess[i] = _solved[i]
 				color = "#2099FF"
 
-		elif _extra_help && guess[i] in _words[_current_word]:
+		elif _extra_help && guess[i] in _words[_current_word] && (!Settings.setting.postjam || (guess[i] in _unsolved)):
 			_last_guess += "[color=yellow]%s[/color]" % guess[i]
 			wrongs += 1
 		else:
@@ -350,6 +362,7 @@ func _make_guess(guess):
 		else:
 			_current_word += 1
 			_solved = {}
+			_unsolved = _words[_current_word] #postjam
 			_last_guess = "[color=red]%s[/color]" % "_".repeat(_words[_current_word].length())
 
 		write_terminal("Moving to next one...\n")

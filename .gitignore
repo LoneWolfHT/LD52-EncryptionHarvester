@@ -1,5 +1,7 @@
 # Game-specific ignores
 *.wav
+screenshots/
+EXPORTS/
 
 # Godot-specific ignores
 .import/

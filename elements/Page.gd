@@ -15,6 +15,9 @@ var content_set = false
 func _ready():
 	update_help_text()
 
+	if Settings.setting.postjam:
+		$Blip.volume_db -= 12.0
+
 	$Blip.volume_db += Settings.setting.audio_volume_shift
 
 	if self.connect("start_hacking", get_parent(), "start_hacking") != OK:

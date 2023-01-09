@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://util/buttonpress.gd" type="Script" id=1]
 [ext_resource path="res://scenes/Game.gd" type="Script" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://audio/volumeblip.ogg" type="AudioStream" id=7]
 [ext_resource path="res://audio/game.ogg" type="AudioStream" id=8]
 [ext_resource path="res://font/FiraMono/FiraMono-Regular.otf" type="DynamicFontData" id=9]
+[ext_resource path="res://audio/game_postjam.ogg" type="AudioStream" id=10]
 
 [sub_resource type="DynamicFont" id=1]
 size = 29
@@ -67,9 +68,12 @@ signal_target = NodePath("../Page")
 [node name="Blip" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 7 )
 
+[node name="MusicPostJam" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 10 )
+volume_db = 2.0
+
 [node name="Music" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 8 )
 volume_db = -2.0
-autoplay = true
 
 [connection signal="timeout" from="Timer/Timer" to="." method="_on_Timer_timeout"]

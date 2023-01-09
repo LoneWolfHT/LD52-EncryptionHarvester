@@ -1,5 +1,6 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=20 format=2]
 
+[ext_resource path="res://font/FontMonoButton.tres" type="DynamicFont" id=1]
 [ext_resource path="res://PFP.png" type="Texture" id=2]
 [ext_resource path="res://font/Gravity-Regular.otf" type="DynamicFontData" id=3]
 [ext_resource path="res://elements/VolumeSlider.tscn" type="PackedScene" id=4]
@@ -10,6 +11,7 @@
 [ext_resource path="res://audio/volumeblip.ogg" type="AudioStream" id=9]
 [ext_resource path="res://font/FiraMono/FiraMono-Regular.otf" type="DynamicFontData" id=10]
 [ext_resource path="res://audio/menu.ogg" type="AudioStream" id=11]
+[ext_resource path="res://font/FiraMono/FiraMono-Bold.otf" type="DynamicFontData" id=12]
 
 [sub_resource type="DynamicFont" id=4]
 size = 61
@@ -29,8 +31,20 @@ font_data = ExtResource( 3 )
 [sub_resource type="StyleBoxFlat" id=2]
 bg_color = Color( 0.0470588, 0.0509804, 0.0823529, 1 )
 
-[sub_resource type="DynamicFont" id=3]
-size = 24
+[sub_resource type="StyleBoxFlat" id=5]
+bg_color = Color( 0, 0, 0, 1 )
+
+[sub_resource type="StyleBoxFlat" id=6]
+bg_color = Color( 0.0705882, 0.0745098, 0.12549, 1 )
+
+[sub_resource type="DynamicFont" id=8]
+size = 22
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 12 )
+
+[sub_resource type="DynamicFont" id=7]
+size = 20
 use_mipmaps = true
 use_filter = true
 font_data = ExtResource( 10 )
@@ -147,20 +161,35 @@ anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = -359.0
-margin_top = -101.0
+margin_top = -270.0
+margin_bottom = -66.0
 custom_styles/panel = SubResource( 2 )
+
+[node name="ExtraHints" type="CheckButton" parent="Toggles"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -170.5
+margin_top = 11.0
+margin_right = 170.5
+margin_bottom = 51.0
+custom_fonts/font = ExtResource( 1 )
+text = "Extra Letter Hints"
+flat = true
+align = 2
+icon_align = 2
+
+[node name="Blip" type="AudioStreamPlayer" parent="Toggles/ExtraHints"]
+stream = ExtResource( 9 )
 
 [node name="TypeSounds" type="CheckButton" parent="Toggles"]
 anchor_left = 0.5
-anchor_top = 0.5
 anchor_right = 0.5
-anchor_bottom = 0.5
 margin_left = -170.5
-margin_top = -2.0
+margin_top = 51.0
 margin_right = 170.5
-margin_bottom = 38.0
-custom_fonts/font = SubResource( 3 )
-text = "Typing Sounds     "
+margin_bottom = 91.0
+custom_fonts/font = ExtResource( 1 )
+text = "Typing Sounds"
 flat = true
 align = 2
 icon_align = 2
@@ -168,23 +197,43 @@ icon_align = 2
 [node name="Blip" type="AudioStreamPlayer" parent="Toggles/TypeSounds"]
 stream = ExtResource( 9 )
 
-[node name="ExtraHints" type="CheckButton" parent="Toggles"]
+[node name="PostJam" type="CheckButton" parent="Toggles"]
 anchor_left = 0.5
-anchor_top = 0.5
+anchor_top = 1.0
 anchor_right = 0.5
-anchor_bottom = 0.5
+anchor_bottom = 1.0
 margin_left = -170.5
-margin_top = -42.0
+margin_top = -53.0
 margin_right = 170.5
-margin_bottom = -2.0
-custom_fonts/font = SubResource( 3 )
-text = "Always Extra Hints"
+margin_bottom = -13.0
+custom_colors/font_color_focus = Color( 1, 0, 0, 1 )
+custom_colors/font_color_hover_pressed = Color( 0, 0.6, 0, 1 )
+custom_colors/font_color = Color( 1, 0, 0, 1 )
+custom_colors/font_color_hover = Color( 0.666667, 0, 0, 1 )
+custom_colors/font_color_pressed = Color( 0, 1, 0, 1 )
+custom_fonts/font = ExtResource( 1 )
+text = "Post Jam Version"
 flat = true
 align = 2
 icon_align = 2
 
-[node name="Blip" type="AudioStreamPlayer" parent="Toggles/ExtraHints"]
+[node name="Blip" type="AudioStreamPlayer" parent="Toggles/PostJam"]
 stream = ExtResource( 9 )
+
+[node name="Changes" type="Button" parent="Toggles"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -158.5
+margin_top = 13.0
+margin_right = 158.5
+margin_bottom = 49.0
+custom_fonts/font = ExtResource( 1 )
+text = "Show PostJam Changes"
+script = ExtResource( 6 )
+button_name = "changes"
+signal_target = NodePath("../..")
 
 [node name="QuitGame" type="Button" parent="."]
 anchor_left = 0.5
@@ -205,7 +254,67 @@ signal_target = NodePath("..")
 [node name="KeyChangeMenu" parent="." instance=ExtResource( 8 )]
 visible = false
 
+[node name="PostJamChanges" type="Panel" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_styles/panel = SubResource( 5 )
+
+[node name="Button" type="Button" parent="PostJamChanges"]
+margin_left = 16.0
+margin_top = 14.0
+margin_right = 143.0
+margin_bottom = 84.0
+custom_fonts/font = ExtResource( 1 )
+text = "< Back"
+
+[node name="Panel" type="Panel" parent="PostJamChanges"]
+margin_left = 174.0
+margin_top = 14.0
+margin_right = 1265.0
+margin_bottom = 703.0
+custom_styles/panel = SubResource( 6 )
+
+[node name="ColorRect" type="ColorRect" parent="PostJamChanges/Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 12.0
+margin_top = 11.0
+margin_right = -12.0
+margin_bottom = -11.0
+color = Color( 0, 0, 0, 1 )
+
+[node name="RichTextLabel" type="RichTextLabel" parent="PostJamChanges/Panel/ColorRect"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 7.0
+margin_top = 6.0
+margin_right = -9.0
+margin_bottom = -8.0
+custom_colors/default_color = Color( 0, 1, 0, 1 )
+custom_constants/line_separation = 10
+custom_fonts/bold_font = SubResource( 8 )
+custom_fonts/normal_font = SubResource( 7 )
+bbcode_enabled = true
+bbcode_text = "
+[center][color=red][b]These changes are only applied when you enable them
+(See the toggle button in the main menu)[/b][/color][/center]
+
+- Reduced the volume of the text typing effects
+- Ingame Music: Added instruments cut from the jam version, track is 2x as long
+- Fixed yellow letter hints showing for letters you've already found
+- Misc text fixes"
+text = "
+These changes are only applied when you enable them
+(See the toggle button in the main menu)
+
+- Reduced the volume of the text typing effects
+- Ingame Music: Added instruments cut from the jam version, track is 2x as long
+- Fixed yellow letter hints showing for letters you've already found
+- Misc text fixes"
+
 [connection signal="finished" from="Blip" to="." method="_on_Blip_finished"]
 [connection signal="timeout" from="Music/Timer" to="." method="_on_Timer_timeout"]
-[connection signal="toggled" from="Toggles/TypeSounds" to="." method="_on_TypeSounds_toggled"]
 [connection signal="toggled" from="Toggles/ExtraHints" to="." method="_on_ExtraHints_toggled"]
+[connection signal="toggled" from="Toggles/TypeSounds" to="." method="_on_TypeSounds_toggled"]
+[connection signal="toggled" from="Toggles/PostJam" to="." method="_on_PostJam_toggled"]
+[connection signal="button_up" from="PostJamChanges/Button" to="." method="_on_Button_button_up"]

@@ -12,6 +12,7 @@ export var default_setting = {
 	"current_page"      : 0,
 	"score"             : 0,
 	"highscore"         : 0,
+	"postjam"           : false,
 }
 
 export var setting: Dictionary = default_setting.duplicate(true)

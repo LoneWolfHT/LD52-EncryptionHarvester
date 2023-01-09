@@ -37,6 +37,12 @@ scene_naming=1
 
 common/drop_mouse_on_gui_input_disabled=true
 
+[importer_defaults]
+
+texture={
+"flags/filter": false
+}
+
 [physics]
 
 common/enable_pause_aware_picking=true
