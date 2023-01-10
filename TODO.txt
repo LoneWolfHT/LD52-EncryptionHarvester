@@ -1,0 +1,2 @@
+Give letter hints and word length or rework letter submission to be more like wordle's
+Fix cheat option not showing in optional decryptions
