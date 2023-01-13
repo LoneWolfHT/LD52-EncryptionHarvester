@@ -150,7 +150,19 @@ They've reached out to you for help, and you have a tool that can fully decrypt 
 As you've probably guessed, that's all there is for now. I might continue the story in a future game though.
 
 I've made a timed highscore-tracking mode with cheats disabled, if you enjoyed playing this game you can try that below.
-As of writing this I have 5 minutes until the deadline, so it's not tested :P
+Post-Jam note: The jam version is pretty much unplayable, and had game-breaking bugs until recently, I had implemented it 5 minutes before the deadline.
+
+[hack]allwords[/hack]
+""",
+
+#This will be overwritted by code, and is here as a placeholder in case the user restarts the game
+"1338":
+"""[center]Thanks for playing to the end![/center]
+
+As you've probably guessed, that's all there is for now. I might continue the story in a future game though.
+
+I've made a timed highscore-tracking mode with cheats disabled, if you enjoyed playing this game you can try that below.
+Post-Jam note: The jam version is pretty much unplayable, and had game-breaking bugs until recently, I had implemented it 5 minutes before the deadline.
 
 [hack]allwords[/hack]
 """,
@@ -279,20 +291,24 @@ func stop_hacking(success = false, id = ""):
 			$Timer/Timer.stop()
 			$Timer.visible = false
 
-			if _allwords_timer > Settings.setting.highscore:
+			if Settings.setting.highscore <= 0 || _allwords_timer < Settings.setting.highscore:
 				Settings.setting.highscore = _allwords_timer
 
-				story[1338] = "[center][color=#11EE00]New Best Time![/color]\n\nYou harvested %d words in %0.3f seconds![/center]" % [
-					words.size(),
-					_allwords_timer
-				]
-			else:
-				story[1338] = "[center]All Data Decrypted!\n\nYou harvested %d words in %0.3f seconds!\nBest Time: %0.3f seconds.[/center]" % [
+				story["1338"] = "[center][color=#11EE00]New Best Time![/color]\n\nYou harvested %d words in %0.3f seconds!%s[/center]" % [
+					" (PostJam)" if Settings.setting.postjam else "",
 					words.size(),
 					_allwords_timer,
-					Settings.setting.highscore
+					"\n\nWould you like to try again? [hack]allwords[/hack]" if Settings.setting.postjam else "",
+				]
+			else:
+				story["1338"] = "[center]All Data Decrypted!\n\nYou harvested %d words in %0.3f seconds!\nBest Time: %0.3f seconds.%s[/center]" % [
+					words.size(),
+					_allwords_timer,
+					Settings.setting.highscore,
+					"\n\nWould you like to try again? [hack]allwords[/hack]" if Settings.setting.postjam else "",
 				]
 
+			_last_page = "0" # Make sure the placeholder is overwritten if this is a returning session
 			Settings.setting.current_page = 1338
 		else:
 			Settings.setting.current_page = id as int

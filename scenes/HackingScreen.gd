@@ -36,7 +36,10 @@ func _ready():
 	$CheatSheet/BG/commands.bbcode_text = "[color=#00ff00][url]help[/url][/color]\n[color=#00ff00][url]exit[/url][/color]\n[color=#00ff00][url]clear[/url][/color]\n[color=#00ff00][url]goal[/url][/color]\n[color=#00ff00]guess <word>[/color]"
 
 func bringup(id, newwords, random = false, showfirst = false, help = false, disable_hacks = false):
-	if id != _id:
+	if id != _id || id == "allwords":
+		if Settings.setting.postjam:
+			_clear_terminal()
+
 		_words = newwords
 		_current_word = 0
 		_random = random
@@ -231,6 +234,8 @@ func command(text, clicked = false):
 			elif text[1] == "do":
 				_make_guess(_words[_current_word])
 				return
+			elif text[1] == "exitendgame":
+				emit_signal("stop_hacking", true, "theend")
 
 		write_terminal(
 """Here are some cheats, courtesy of the hacker 'Harvest Moon':
@@ -244,6 +249,11 @@ func command(text, clicked = false):
 		elif text.size() > 1:
 			if text[1].length() == _words[_current_word].length():
 				_make_guess(text[1])
+
+				if Settings.setting.postjam:
+					$Input/Terminal.text = "guess "
+					_on_Terminal_text_changed()
+					return false
 			else:
 				if text[1].length() - _words[_current_word].length() > 0:
 					write_terminal("%d too many characters\n" % (text[1].length() - _words[_current_word].length()))
@@ -259,13 +269,36 @@ func command(text, clicked = false):
 	else:
 		if text.size() <= 1:
 			write_terminal("Converting command to guess:\n")
+
 			command("guess " + text[0], true)
+
+			if Settings.setting.postjam:
+				$Input/Terminal.text = "guess "
+				$Input/Terminal.cursor_set_column(6)
+
+				_on_Terminal_text_changed()
+				return false
 		else:
 			write_terminal("Invalid Command.\n")
 
+var _color_good = false
 func _on_Terminal_text_changed():
 	if !self.visible:
 		return
+
+	if Settings.setting.postjam:
+		var guess = $Input/Terminal.text.strip_escapes().strip_edges().split(" ")
+		if guess.size() > 1 && guess[0] == "guess":
+			if _words[_current_word].length() == guess[1].length():
+				if !_color_good:
+					$Input/Terminal.set("custom_colors/font_color", Color("#00FF00"))
+					_color_good = true
+			elif _color_good:
+				$Input/Terminal.set("custom_colors/font_color", Color("#AAFFAA"))
+				_color_good = false
+		elif !_color_good:
+			$Input/Terminal.set("custom_colors/font_color", Color("#00FF00"))
+			_color_good = true
 
 	if "\n" in $Input/Terminal.text:
 		$Input/Terminal.text = $Input/Terminal.text.strip_escapes()
@@ -296,8 +329,6 @@ func _on_Terminal_text_changed():
 			$Input/Blip.pitch_scale = 1.0
 			$Input/Blip.play()
 
-
-
 func _on_commands_meta_clicked(meta):
 	meta = str(meta)
 
@@ -307,11 +338,25 @@ func _on_commands_meta_clicked(meta):
 
 func _show_goal():
 	if !_done:
-		write_terminal("\nGoal: %d/%d words guessed.\nCurrent Word: [color=white]|[/color]%s[color=white]|[/color]\n" % [
-			_current_word,
-			_words.size(),
-			_last_guess,
-		])
+		if Settings.setting.postjam:
+			var extra = ""
+
+			if _words[_current_word] == "BLACKHOLE" || _words[_current_word] == "INDIANOCEAN":
+				extra = " (Two words, without a space between them)"
+
+			write_terminal("\nGoal: %d/%d words guessed.\nCurrent Word: [color=white]|[/color]%s[color=white]|[/color] (%d letters)%s\n" % [
+				_current_word,
+				_words.size(),
+				_last_guess,
+				_words[_current_word].length(),
+				extra,
+			])
+		else:
+			write_terminal("\nGoal: %d/%d words guessed.\nCurrent Word: [color=white]|[/color]%s[color=white]|[/color]\n" % [
+				_current_word,
+				_words.size(),
+				_last_guess,
+			])
 	else:
 		write_terminal("\nGoal: %d/%d words guessed.\nLast Word: [color=white]|[/color]%s[color=white]|[/color]\n%s\n" % [
 			_words.size(),
@@ -323,6 +368,13 @@ func _show_goal():
 func _make_guess(guess):
 	guess = guess.to_upper()
 	_last_guess = ""
+
+	if Settings.setting.postjam:
+		for i in range(0, guess.length()):
+			var pos = _unsolved.find(_words[_current_word][i])
+
+			if pos >= 0:
+				_unsolved.erase(pos, 1)
 
 	var wrongs = 0
 	var guessedit = ""
@@ -343,7 +395,6 @@ func _make_guess(guess):
 			else:
 				guess[i] = _solved[i]
 				color = "#2099FF"
-
 		elif _extra_help && guess[i] in _words[_current_word] && (!Settings.setting.postjam || (guess[i] in _unsolved)):
 			_last_guess += "[color=yellow]%s[/color]" % guess[i]
 			wrongs += 1
@@ -359,6 +410,10 @@ func _make_guess(guess):
 		write_terminal("Word decrypted. ")
 
 		if _current_word == _words.size() - 1: #All done
+			if _id == "allwords": #instant-quit for highscore mode
+				emit_signal("stop_hacking", true, _id)
+				return
+
 			_done = true
 			write_terminal("\nDecrypting the rest of the data[brk].[brk].[brk].[brk]\nDone. Type [color=white]exit[/color] to continue\n")
 			return
