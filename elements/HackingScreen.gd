@@ -371,10 +371,11 @@ func _make_guess(guess):
 
 	if Settings.setting.postjam:
 		for i in range(0, guess.length()):
-			var pos = _unsolved.find(_words[_current_word][i])
+			if guess[i] == _words[_current_word][i]:
+				var pos = _unsolved.find(_words[_current_word][i])
 
-			if pos >= 0:
-				_unsolved.erase(pos, 1)
+				if pos >= 0:
+					_unsolved.erase(pos, 1)
 
 	var wrongs = 0
 	var guessedit = ""
